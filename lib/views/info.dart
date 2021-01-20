@@ -13,6 +13,22 @@ class Info extends StatefulWidget {
 }
 
 class _InfoState extends State<Info> {
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  _showSnackBar(String message, {Color bgColor}) {
+    _scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: bgColor ?? Colors.red,
+        duration: Duration(seconds: 5),
+      ),
+    );
+  }
+
+  _hideSnackBar() {
+    _scaffoldKey.currentState.hideCurrentSnackBar();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -21,7 +37,12 @@ class _InfoState extends State<Info> {
 
   void _getData() async {
     var provider = Provider.of<InfoProvider>(context, listen: false);
-    provider.setPlayerInfo(await ApiService.fetchPlayerInfo(widget.playerName));
+    var httpResponse = await ApiService.fetchPlayerInfo(widget.playerName);
+    if (httpResponse.isSuccessful) {
+      provider.setPlayerInfo(httpResponse.data);
+    } else {
+      _showSnackBar(httpResponse.message);
+    }
     provider.setIsProcessing(false);
   }
 
