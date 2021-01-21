@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterApiWithProvider/controllers/info_provider.dart';
-import 'package:flutterApiWithProvider/views/info.dart';
+import 'package:flutterApiWithProvider/controllers/login_provider.dart';
+import 'package:flutterApiWithProvider/services/google_login_service.dart';
+import 'package:flutterApiWithProvider/views/login.dart';
 import 'package:provider/provider.dart';
+
+import 'info.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -10,6 +13,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   GlobalKey<FormState> _formKey = GlobalKey();
 
   TextEditingController _playerNameController = TextEditingController();
@@ -22,10 +26,7 @@ class _HomeState extends State<Home> {
     if (_formKey.currentState.validate()) {
       Navigator.of(context).push(
         CupertinoPageRoute(
-          builder: (context) => ChangeNotifierProvider(
-            create: (context) => InfoProvider(),
-            child: Info(_playerNameController.text),
-          ),
+          builder: (context) => Info(_playerNameController.text),
         ),
       );
     } else {
@@ -35,9 +36,76 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    // var provider = Provider.of<LoginProvider>(context);
+
+    void _navigateToLoginScreen() async {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          content: Text('Log out Success'),
+          backgroundColor: Colors.green,
+        ),
+      );
+      //shows the snack bar for 2 seconds before navigating to the login page
+      await Future.delayed(const Duration(seconds: 2), () {
+        Navigator.of(context)
+            .pushReplacement(CupertinoPageRoute(builder: (context) => Login()));
+      });
+    }
+
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: Drawer(
+        child: Column(
+          children: [
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: Colors.grey.withOpacity(0.4))),
+              ),
+              height: 200.0,
+              child: Consumer<LoginProvider>(
+                builder: (_, provider, __) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: NetworkImage(provider.imgUrl),
+                        radius: 30.0,
+                      ),
+                      SizedBox(height: 10.0),
+                      Text(provider.name),
+                    ],
+                  );
+                },
+              ),
+            ),
+            MaterialButton(
+              onPressed: () {},
+              child: Row(
+                children: [],
+              ),
+            ),
+          ],
+        ),
+      ),
       appBar: AppBar(
-        title: Text('r6 with provider'),
+        title: Consumer<LoginProvider>(
+          builder: (_, provider, __) {
+            return Text(provider.name);
+          },
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              signOutGoogle();
+              _navigateToLoginScreen();
+            },
+            icon: Icon(Icons.logout),
+          )
+        ],
       ),
       body: Container(
         padding: EdgeInsets.all(20.0),

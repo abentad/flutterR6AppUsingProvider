@@ -25,9 +25,9 @@ class _InfoState extends State<Info> {
     );
   }
 
-  _hideSnackBar() {
-    _scaffoldKey.currentState.hideCurrentSnackBar();
-  }
+  // _hideSnackBar() {
+  //   _scaffoldKey.currentState.hideCurrentSnackBar();
+  // }
 
   @override
   void initState() {
@@ -49,6 +49,7 @@ class _InfoState extends State<Info> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text(widget.playerName),
       ),
@@ -88,3 +89,25 @@ class _InfoState extends State<Info> {
     );
   }
 }
+
+// Text(provider.playerInfo.playerName),
+// Text(provider.playerInfo.plCasualPlayTime),
+// Text(provider.playerInfo.plRankText),
+// Text(provider.playerInfo.plRankedKd),
+// Text(provider.playerInfo.plRankedKills),
+// Text(provider.playerInfo.plRankedDeaths),
+// Text(provider.playerInfo.plRankedLosses),
+// Text(provider.playerInfo.plRankedMatches),
+// Text(provider.playerInfo.plRankedPlayTime),
+// Text(provider.playerInfo.plRankedWins),
+// Text(provider.playerInfo.plThisSeasonRankedKd),
+// Text(provider.playerInfo.plThisSeasonRankedMmr),
+// Text(provider.playerInfo.plTotalDeaths),
+// Text(provider.playerInfo.plTotalKD),
+// Text(provider.playerInfo.plTotalKillAssists),
+// Text(provider.playerInfo.plTotalKills),
+// Text(provider.playerInfo.plTotalLosses),
+// Text(provider.playerInfo.plTotalMatchesPlayed),
+// Text(provider.playerInfo.plTotalPlayTime),
+// Text(provider.playerInfo.plTotalRevives),
+// Text(provider.playerInfo.plTotalWins),
